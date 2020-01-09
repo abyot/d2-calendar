@@ -5,8 +5,8 @@ import { ethiopian } from "./constants";
 export default class EthiopianCalendar {
     /**
      * @param { number | string } year - A numeric year value if second and third parameters are provided, otherwise a date string
-     * @param { number } month A zero-based numeric value for the month
-     * @param { number } day A numeric value equal for the day of the month.
+     * @param { number } month A numeric month value
+     * @param { number } day A numeric day value
      */
     constructor(year, month, day) {
         if (arguments.length === 0) {
@@ -19,7 +19,7 @@ export default class EthiopianCalendar {
             } else if (typeof year === "object" && year instanceof Date) {
                 const _date = EthiopianCalendar.fromIso(
                     year.getFullYear(),
-                    year.getMonth(),
+                    year.getMonth() + 1,
                     year.getDate()
                 );
                 [this.year, this.month, this.date] = dateAsArrayString(_date);
@@ -38,8 +38,8 @@ export default class EthiopianCalendar {
     /**
      * Converts a Ethiopian date to ISO / Gregorian date.
      * @param { number | string  } year - A numeric year value if second and third parameters are provided, otherwise a date string
-     * @param { number } month A zero-based numeric value for the month (0 for January, 11 for December)
-     * @param { number } day A numeric value equal for the day of the month.
+     * @param { number } month A numeric month value
+     * @param { number } day A numeric day value
      * @returns ISO date object
      * @api public
      */
@@ -49,19 +49,17 @@ export default class EthiopianCalendar {
             if (typeof year === "string") {
                 _date = dateAsArrayString(new EthiopianCalendar(year), true);
             } else if (typeof year === "object" && year instanceof EthiopianCalendar) {
-                _date = dateAsArrayString(year, true);
+                _date = dateAsArrayString(year);
             } else {
                 throw new Error("Invalid Argument Exception");
             }
         } else if (arguments.length === 3) {
-            _date = [year, month + 1, day];
+            _date = [year, month, day];
         } else {
             throw new Error("Invalid Argument Exception");
         }
 
-        _date[1] = _date[1] == 1 ? 2 : _date[1];
-
-        let jdn = EthiopianCalendar.toJdn(_date[0], _date[1] - 1, _date[2]);
+        let jdn = EthiopianCalendar.toJdn(_date[0], _date[1], _date[2]);
 
         return GregorianCalendar.fromJdn(jdn);
     }
@@ -69,8 +67,8 @@ export default class EthiopianCalendar {
     /**
      * Converts ISO / Gregorian date to Ethiopian date.
      * @param { number | string  } year - A numeric year value if second and third parameters are provided, otherwise a date string
-     * @param { number } month A zero-based numeric value for the month (0 for January, 11 for December)
-     * @param { number } day A numeric value equal for the day of the month.
+     * @param { number } month A numeric month value
+     * @param { number } day A numeric day value
      * @returns Ethiopian date object
      * @api public
      */
@@ -97,11 +95,9 @@ export default class EthiopianCalendar {
 
     static fromJdn(jdn) {
 
-        const r = mod((jdn - ethiopian.EPOCH), 1461);
-        const n = mod(r, 365) + 365 * quotient(r, 1460);
-        const year = 4 * quotient((jdn - ethiopian.EPOCH), 1461) + quotient(r, 365) - quotient(r, 1460);
-        const month = quotient(n, 30) + 1;
-        const day = mod(n, 30) + 1;
+        const year = Math.floor((4 * (jdn - ethiopian.EPOCH) + 1463) / 1461);
+        const month = 1 + Math.floor((jdn - EthiopianCalendar.toJdn(year, 1, 1)) / 30);
+        const day = jdn + 1 - EthiopianCalendar.toJdn(year, month, 1);
 
         return new EthiopianCalendar(year, month, day)
     }
@@ -110,11 +106,8 @@ export default class EthiopianCalendar {
 
         EthiopianCalendar.validate(year, month, day);
 
-        return (ethiopian.EPOCH + 365) + 
-            365 * (year - 1) + 
-            quotient(year, 4) + 
-            30 * month +  
-            day - 31;
+        return ethiopian.EPOCH - 1 + 365 * (year - 1) +
+            Math.floor(year / 4) + 30 * (month - 1) + day
 
     }
 

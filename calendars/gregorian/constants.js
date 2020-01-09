@@ -1,5 +1,5 @@
 const gregorian = {
-    EPOCH: 1721426,
+    EPOCH: 1721425.5,
     monthCount: 12,
     MONTHS: [
         "January",
@@ -29,7 +29,7 @@ const gregorian = {
         NOVEMBER: 11,
         DECEMBER: 12
     },
-    monthDays: [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    monthDays: [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 }
 
 export {

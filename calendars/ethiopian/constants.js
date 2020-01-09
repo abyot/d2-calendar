@@ -1,5 +1,5 @@
 const ethiopian = {
-    EPOCH: 1723856,
+    EPOCH: 1724220.5,
     monthCount: 13,
     monthNames: [
         'Meskerem',
