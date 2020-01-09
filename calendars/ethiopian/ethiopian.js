@@ -47,7 +47,7 @@ export default class EthiopianCalendar {
         let _date;
         if (arguments.length === 1) {
             if (typeof year === "string") {
-                _date = dateAsArrayString(new EthiopianCalendar(year), true);
+                _date = dateAsArrayString(new EthiopianCalendar(year));
             } else if (typeof year === "object" && year instanceof EthiopianCalendar) {
                 _date = dateAsArrayString(year);
             } else {
@@ -145,7 +145,7 @@ export default class EthiopianCalendar {
             const _date = dateString.split("-");
             if (_date.length === 3) {
                 const [y, m, d] = _date;
-                return new EthiopianCalendar(y, m - 1, d);
+                return new EthiopianCalendar(y, m, d);
             }
             throw new Error(`ParsingError: Can't parse ${dateString}`);
         } else {
