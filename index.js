@@ -1,12 +1,13 @@
 import Ethiopian from './calendars/ethiopian/ethiopian';
+import Nepali from './calendars/nepali/nepali';
 
-let date = new Ethiopian();
+let eDate = new Ethiopian("2011-13-4");
 
-/*console.log('toIso (2012-1-1):  ', Ethiopian.toIso("2012-1-1").toString());
+console.log('Ethiopian - toIso (2012-1-1):  ', Ethiopian.toIso("2012-1-1").toString());
 
-console.log('fromIso (2019-9-9):  ', Ethiopian.fromIso("2019-9-9").toString());
+console.log('Ethiopian - fromIso (2019-9-9):  ', Ethiopian.fromIso("2019-9-9").toString());
 
-console.log('getFullYear (2019-9-9):  ', Ethiopian.fromIso("2019-9-9").getFullYear());
+/*console.log('getFullYear (2019-9-9):  ', Ethiopian.fromIso("2019-9-9").getFullYear());
 
 console.log('getMonth (2019-9-9):  ', Ethiopian.fromIso("2019-9-9").getMonth());
 
@@ -16,14 +17,18 @@ console.log('getMonthName (2019-9-9):  ', Ethiopian.fromIso("2019-9-9").getMonth
 
 console.log('getShortMonthName (2019-9-9):  ', Ethiopian.fromIso("2019-9-9").getShortMonthName());
 
-console.log('getDayOfWeek:  ', Ethiopian.fromIso("2019-9-9").getDayOfWeek());
+console.log('getDayOfWeek:  ', Ethiopian.fromIso("2019-9-9").getDayOfWeek());*/
 
-console.log('fromIso - today:  ', Ethiopian.fromIso(new Date()).toString());
+console.log('Ethiopian - fromIso - today:  ', Ethiopian.fromIso(new Date()).toString());
 
-console.log('toIso - today:  ', Ethiopian.toIso(new Ethiopian()).toString());*/
+console.log('Ethiopian - toIso - today:  ', Ethiopian.toIso(new Ethiopian()).toString());
 
-console.log('addDays:  ', date.addDays(2).toString());
+console.log('Ethiopia - addDays:  ', eDate.addDays(5).toString());
 
-console.log('addMonths:  ', date.addMonths(2).toString());
+let nDate = new Nepali();
 
-console.log('addYears:  ', date.addYears(2).toString());
+console.log('Nepali - fromIso - today:  ', Nepali.fromIso(new Date()).toString());
+
+console.log('Nepali - toIso - today:  ', Nepali.toIso(new Nepali()).toString());
+
+console.log('Nepali - addDays:  ', nDate.addDays(31).toString());

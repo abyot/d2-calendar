@@ -1,5 +1,5 @@
 import { gregorian } from "./constants"
-import { mod, CalendarValidationException } from "../utils";
+import { mod, dateAsArrayString, CalendarValidationException } from "../utils";
 
 const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
@@ -52,7 +52,13 @@ export default class GregorianCalendar {
         const month = Math.floor(((yearDate + leapAdj) * 12 + 373) / 367);
         const date = jd0 - GregorianCalendar.toJdn(year, month, 1) + 1;
 
-        return new Date(year, month - 1, date);
+        let _date = new Date();
+
+        _date.setFullYear(year);
+        _date.setMonth(month-1);
+        _date.setDate(date);
+        
+        return _date;
     }
 
     static toJdn(year, month, day) {
@@ -71,7 +77,22 @@ export default class GregorianCalendar {
     }
 
     static dateDifference(date1, date2) {
-        return date2.getJdn() - date1.getJdn()
+        let _date1 = dateAsArrayString(date1, true);
+        let _date2 = dateAsArrayString(date2, true);
+
+        let jdn1 = this.toJdn(_date1[0], _date1[1], _date1[2]);
+        let jdn2 = this.toJdn(_date2[0], _date2[1], _date2[2]);
+
+        return jdn1 - jdn2;
+    }
+
+    static getDayOfYear( date ){
+        let endOfLastYear = new Date( date.getFullYear() - 1, 11, 31 );
+        return this.dateDifference(date, endOfLastYear);
+    }
+
+    static daysInYear( year ){
+        return this.isLeapYear(year) ? 366 : 365;
     }
 
     toString() {

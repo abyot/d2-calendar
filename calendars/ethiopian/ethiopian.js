@@ -1,5 +1,5 @@
 import GregorianCalendar from '../gregorian/GregorianCalendar'
-import { mod, quotient, dateAsArrayString, CalendarValidationException } from "../utils";
+import { mod, dateAsArrayString, CalendarValidationException } from "../utils";
 import { ethiopian } from "./constants";
 
 export default class EthiopianCalendar {
@@ -59,7 +59,7 @@ export default class EthiopianCalendar {
             throw new Error("Invalid Argument Exception");
         }
 
-        let jdn = EthiopianCalendar.toJdn(_date[0], _date[1], _date[2]);
+        let jdn = this.toJdn(_date[0], _date[1], _date[2]);
 
         return GregorianCalendar.fromJdn(jdn);
     }
@@ -90,25 +90,23 @@ export default class EthiopianCalendar {
 
         let jdn = GregorianCalendar.toJdn(_date[0], _date[1], _date[2]);
 
-        return EthiopianCalendar.fromJdn(jdn);
+        return this.fromJdn(jdn);
     }
 
     static fromJdn(jdn) {
 
         const year = Math.floor((4 * (jdn - ethiopian.EPOCH) + 1463) / 1461);
-        const month = 1 + Math.floor((jdn - EthiopianCalendar.toJdn(year, 1, 1)) / 30);
-        const day = jdn + 1 - EthiopianCalendar.toJdn(year, month, 1);
+        const month = 1 + Math.floor((jdn - this.toJdn(year, 1, 1)) / 30);
+        const day = jdn + 1 - this.toJdn(year, month, 1);
 
         return new EthiopianCalendar(year, month, day)
     }
 
     static toJdn(year, month, day) {
 
-        EthiopianCalendar.validate(year, month, day);
+        this.validate(year, month, day);
 
-        return ethiopian.EPOCH - 1 + 365 * (year - 1) +
-            Math.floor(year / 4) + 30 * (month - 1) + day
-
+        return day + ((month - 1) * 30) +  ((year - 1) * 365) + Math.floor(year / 4) + ethiopian.EPOCH - 1;
     }
 
     static isLeapYear(year) {
@@ -116,11 +114,14 @@ export default class EthiopianCalendar {
     }
 
     static validate(year, month, day) {
+        if ( year < 1 ) {
+            throw new CalendarValidationException('Invalid year:  ' + year)
+        }
         if (month < 1 || month > ethiopian.monthCount) {
             throw new CalendarValidationException('Invalid month:  ' + month)
         }
 
-        const daysInLeapYearMonth = EthiopianCalendar.isLeapYear(year) ? 6 : 5
+        const daysInLeapYearMonth = this.isLeapYear(year) ? 6 : 5
 
         if (month === ethiopian.monthCount && day > daysInLeapYearMonth) {
             throw new CalendarValidationException('Invalid day:  ' + day)
